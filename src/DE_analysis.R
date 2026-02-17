@@ -10,11 +10,11 @@ open_filter <- function (data_FC,min_expression = 0.05 ,threshold_pvalue = 0.05,
   Col2 <- colnames(data_FC)[2]
   Col3 <- colnames(data_FC)[3]
   
-  data_FC <- data_FC |> 
+  data_FC_filter <- data_FC |> 
     mutate(across(where(is.numeric), ~na_if(., Inf))) |>
     mutate(across(where(is.numeric), ~na_if(., -Inf))) |>
     drop_na() |>
-    filter(Col2> min_expression & Col3 > min_expression) |> 
+    filter(!!sym(Col2)> min_expression | !!sym(Col3) > min_expression) |> 
     mutate(diffexpressed = case_when(
       log2FC > threshold_FC & pValueBH < threshold_pvalue ~ "UP",
       log2FC < -threshold_FC & pValueBH < threshold_pvalue ~ "DOWN",

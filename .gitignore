@@ -51,4 +51,4 @@ po/*~
 rsconnect/
 
 # Reports
-.html
+*.html

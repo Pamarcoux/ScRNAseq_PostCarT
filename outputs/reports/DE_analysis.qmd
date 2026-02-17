@@ -30,6 +30,7 @@ params:
 ```{r}
 #| warning: false
 library(here)
+library(DT)
 source(here("src/Metadata.R"))
 source(here("src/DE_analysis.R"))
 ```
@@ -77,7 +78,8 @@ analyze_pathway <- function(file_path, title) {
 ## Cluster 15 vs All
 
 ### Reactome
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -94,9 +96,20 @@ Plot_DE_up_down(data_FC_up_down,"Reactome Cluster 15 vs All")
 Plot_volcano_DE(data_FC_filter,"Reactome Cluster 15 vs All")
 
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Biocarta
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -112,13 +125,24 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Biocarta Cluster 15 vs All")
 Plot_volcano_DE(data_FC_filter,"Biocarta Cluster 15 vs All")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 > *"We present preclinical studies demonstrating that treatment with CD19-specific, chimeric antigen receptor (CAR)–modified T cells that are further modified to constitutively secrete IL-12 are able to safely eradicate established disease in the absence of prior conditioning. We demonstrate in a novel syngeneic tumor model that tumor elimination requires both CD4^+^ and CD8^+^ T-cell subsets, autocrine IL-12 stimulation, and subsequent IFNγ secretion by the CAR^+^ T cells. Importantly, IL-12–secreting, tumor-targeted T cells acquire intrinsic resistance to T regulatory cell–mediated inhibition. Based on these preclinical data, we anticipate that adoptive therapy using CAR-targeted T cells modified to secrete IL-12 will obviate or reduce the need for potentially hazardous conditioning regimens to achieve optimal antitumor responses in cancer patients."*
 
 [Hollie J. Pegram et al, Immunobiology 2012](https://ashpublications.org/blood/article/119/18/4133/30054/Tumor-targeted-T-cells-modified-to-secrete-IL-12)
 
 ### C5
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -134,9 +158,21 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"C5 Cluster 15 vs All")
 Plot_volcano_DE(data_FC_filter,"C5 Cluster 15 vs All")
 ```
+#### Data Table
+
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 
 ### Gene Expression
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -152,9 +188,25 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Gene Expression Cluster 15 vs All")
 Plot_volcano_DE(data_FC_filter,"Gene Expression Cluster 15 vs All")
 ```
+#### Data Table
+
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
+
+XCL1 is a small cytokine belonging to the C chemokine family produced primarily by activated CD8+ T cells and natural killer (NK) cells.
+XCL 2 is predominantly expressed in activated T cells, but can also be found at low levels in unstimulated cells.
+
 
 ### Hallmark
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -170,9 +222,21 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Hallmark Cluster 15 vs All")
 Plot_volcano_DE(data_FC_filter,"Hallmark Cluster 15 vs All")
 ```
+#### Data Table
+
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 
 ### Wikipathway
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -188,11 +252,23 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Wikipathway Cluster 15 vs All")
 Plot_volcano_DE(data_FC_filter,"Wikipathway Cluster 15 vs All")
 ```
+#### Data Table
+
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 
 ## CAR-T cluster 15 vs No-CAR-T cluster 15
 
 ### Reactome
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -209,9 +285,20 @@ Plot_DE_up_down(data_FC_up_down,"Reactome CAR-T vs No-CAR-T")
 Plot_volcano_DE(data_FC_filter,"Reactome CAR-T vs No-CAR-T")
 
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Biocarta
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -227,7 +314,17 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Biocarta CAR-T vs No-CAR-T")
 Plot_volcano_DE(data_FC_filter,"Biocarta CAR-T vs No-CAR-T")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 Multiple signaling modules linked to T-cell receptor engagement and downstream regulation :
 
 -   TCRA : Lck and Fyn tyrosine kinases in initiation of TCR Activation
@@ -243,7 +340,8 @@ Multiple signaling modules linked to T-cell receptor engagement and downstream r
 -   
 
 ### C5
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -259,9 +357,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"C5 CAR-T vs No-CAR-T")
 Plot_volcano_DE(data_FC_filter,"C5 CAR-T vs No-CAR-T")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Gene Expression
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -277,9 +386,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Gene Expression CAR-T vs No-CAR-T")
 Plot_volcano_DE(data_FC_filter,"Gene Expression CAR-T vs No-CAR-T")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Hallmark
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -295,9 +415,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Hallmark CAR-T vs No-CAR-T")
 Plot_volcano_DE(data_FC_filter,"Hallmark CAR-T vs No-CAR-T")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Wikipathway
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -313,11 +444,22 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Wikipathway CAR-T vs No-CAR-T")
 Plot_volcano_DE(data_FC_filter,"Wikipathway CAR-T vs No-CAR-T")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ## Cluster 15 vs Cluster 6
 
 ### Reactome
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -334,9 +476,20 @@ Plot_DE_up_down(data_FC_up_down,"Reactome Cluster 15 vs cluster 6")
 Plot_volcano_DE(data_FC_filter,"Reactome Cluster 15 vs cluster 6")
 
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Biocarta
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -352,7 +505,17 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Biocarta Cluster 15 vs cluster 6")
 Plot_volcano_DE(data_FC_filter,"Biocarta Cluster 15 vs cluster 6")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 -   HSWI_SNF : Chromatin Remodeling by hSWI/SNF ATP-dependent Complexes
 
 -   BARD1 : BRCA1-dependent Ub-ligase activity
@@ -362,7 +525,8 @@ Plot_volcano_DE(data_FC_filter,"Biocarta Cluster 15 vs cluster 6")
 -   PTC1 : Sonic Hedgehog (SHH) Receptor Ptc1 Regulates cell cycle
 
 ### C5
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -378,9 +542,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"C5 Cluster 15 vs cluster 6")
 Plot_volcano_DE(data_FC_filter,"C5 Cluster 15 vs cluster 6")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Gene Expression
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -396,9 +571,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Gene Expression Cluster 15 vs cluster 6")
 Plot_volcano_DE(data_FC_filter,"Gene Expression Cluster 15 vs cluster 6")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Hallmark
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -414,13 +600,24 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Hallmark Cluster 15 vs cluster 6")
 Plot_volcano_DE(data_FC_filter,"Hallmark Cluster 15 vs cluster 6")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 -   HALLMARK_IL6_JAK_STAT3_SIGNALING : **intense cytokine-driven inflammatory signaling**.
 
 -   Mitotic Spindle : Cell division
 
 ### Wikipathway
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -436,11 +633,22 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Wikipathway Cluster 15 vs cluster 6")
 Plot_volcano_DE(data_FC_filter,"Wikipathway Cluster 15 vs cluster 6")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ## DLBCL cluster 15 vs LN cluster 15
 
 ### Reactome
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -456,9 +664,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Reactome DLBCL cluster 15 vs LN cluster_15")
 Plot_volcano_DE(data_FC_filter,"Reactome DLBCL cluster 15 vs LN cluster_15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Biocarta
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -474,11 +693,22 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Biocarta DLBCL cluster 15 vs LN cluster_15")
 Plot_volcano_DE(data_FC_filter,"Biocarta DLBCL cluster 15 vs LN cluster_15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 SET : Granzyme A mediated Apoptosis Pathway
 
 ### C5
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -494,9 +724,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"C5 DLBCL cluster 15 vs LN cluster_15")
 Plot_volcano_DE(data_FC_filter,"C5 DLBCL cluster 15 vs LN cluster_15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Gene Expression
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -512,9 +753,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Gene Expression DLBCL cluster 15 vs LN cluster_15")
 Plot_volcano_DE(data_FC_filter,"Gene Expression DLBCL cluster 15 vs LN cluster_15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Hallmark
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -530,9 +782,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Hallmark DLBCL cluster 15 vs LN cluster_15")
 Plot_volcano_DE(data_FC_filter,"Hallmark DLBCL cluster 15 vs LN cluster_15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Wikipathway
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -548,11 +811,22 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Wikipathway DLBCL cluster 15 vs LN cluster_15")
 Plot_volcano_DE(data_FC_filter,"Wikipathway DLBCL cluster 15 vs LN cluster_15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ## Post Car-T Cluster 15 vs pre-CAR-T cluster 15
 
 ### Reactome
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -568,9 +842,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Reactome Post Car-T cluster 15 vs pre-Car-T cluster 15")
 Plot_volcano_DE(data_FC_filter,"Reactome Post Car-T cluster 15 vs pre-Car-T cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Biocarta
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -586,9 +871,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Biocarta Post Car-T cluster 15 vs pre-Car-T cluster 15")
 Plot_volcano_DE(data_FC_filter,"Biocarta Post Car-T cluster 15 vs pre-Car-T cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### C5
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -604,9 +900,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"C5 Post Car-T cluster 15 vs pre-Car-T cluster 15")
 Plot_volcano_DE(data_FC_filter,"C5 Post Car-T cluster 15 vs pre-Car-T cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Gene Expression
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -622,9 +929,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Gene Expression Post Car-T cluster 15 vs pre-Car-T cluster 15")
 Plot_volcano_DE(data_FC_filter,"Gene Expression Post Car-T cluster 15 vs pre-Car-T cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Hallmark
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -640,9 +958,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Hallmark Post Car-T cluster 15 vs pre-Car-T cluster 15")
 Plot_volcano_DE(data_FC_filter,"Hallmark Post Car-T cluster 15 vs pre-Car-T cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Wikipathway
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -658,11 +987,22 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Wikipathway Post Car-T cluster 15 vs pre-Car-T cluster 15")
 Plot_volcano_DE(data_FC_filter,"Wikipathway Post Car-T cluster 15 vs pre-Car-T cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ## Relapse Cluster 15 vs Diag Cluster 15
 
 ### Reactome
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -678,9 +1018,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Reactome Relapse Cluster 15 vs Diag Cluster 15")
 Plot_volcano_DE(data_FC_filter,"Reactome Relapse Cluster 15 vs Diag Cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Biocarta
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -696,9 +1047,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Biocarta Relapse Cluster 15 vs Diag Cluster 15")
 Plot_volcano_DE(data_FC_filter,"Biocarta Relapse Cluster 15 vs Diag Cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### C5
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -714,9 +1076,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"C5 Relapse Cluster 15 vs Diag Cluster 15")
 Plot_volcano_DE(data_FC_filter,"C5 Relapse Cluster 15 vs Diag Cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Gene Expression
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -732,9 +1105,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Gene Expression Relapse Cluster 15 vs Diag Cluster 15")
 Plot_volcano_DE(data_FC_filter,"Gene Expression Relapse Cluster 15 vs Diag Cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Hallmark
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -750,9 +1134,20 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Hallmark Relapse Cluster 15 vs Diag Cluster 15")
 Plot_volcano_DE(data_FC_filter,"Hallmark Relapse Cluster 15 vs Diag Cluster 15")
 ```
+#### Data Table
 
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
 ### Wikipathway
-
+::: panel-tabset
+#### Plots
 ```{r}
 #| echo: false
 #| warning: false
@@ -768,3 +1163,14 @@ data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
 Plot_DE_up_down(data_FC_up_down,"Wikipathway Relapse Cluster 15 vs Diag Cluster 15")
 Plot_volcano_DE(data_FC_filter,"Wikipathway Relapse Cluster 15 vs Diag Cluster 15")
 ```
+#### Data Table
+
+```{r}
+#| echo: false
+datatable(
+  data_FC_filter,
+  options = list(pageLength = 15, scrollX = TRUE),
+  filter = 'top'
+)
+```
+:::
