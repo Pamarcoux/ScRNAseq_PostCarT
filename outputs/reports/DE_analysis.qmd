@@ -1,0 +1,770 @@
+---
+title: "Differential Expression Analysis"
+author: "Paul Marcoux"
+date: today
+date-format: "16 02 2026"
+format: 
+  html:
+    page-layout: full
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    code-fold: true
+    code-summary: "Show code"
+    code-tools: true
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+execute:
+  warning: false
+  message: false
+  fig-width: 12
+  column: page
+params:
+  min_expression: 0.05
+  threshold_pvalue: 0.05
+  threshold_FC: 0.5
+  n_top_genes: 15
+---
+
+```{r}
+#| warning: false
+library(here)
+source(here("src/Metadata.R"))
+source(here("src/DE_analysis.R"))
+```
+
+**Analysis parameters:**
+
+-   Minimum expression threshold: `r params$min_expression`
+-   p-value threshold (BH corrected): `r params$threshold_pvalue`
+-   Log2 fold-change threshold: ±`r params$threshold_FC`
+-   Top genes displayed: `r params$n_top_genes`
+
+```{r}
+#| label: setup-params
+#| include: false
+
+# Extraire les paramètres
+min_expression <- params$min_expression
+threshold_pvalue <- params$threshold_pvalue
+threshold_FC <- params$threshold_FC
+n_top_genes <- params$n_top_genes
+```
+
+```{r}
+#| label: helper-function
+#| include: false
+
+analyze_pathway <- function(file_path, title) {
+  data_FC <- import(file_path)
+  data_FC_filter <- open_filter(data_FC, min_expression, threshold_pvalue, threshold_FC)
+  data_FC_filter <- labels_n_up_down(data_FC_filter, n = 10)
+  
+  data_FC_up <- top_n_upregulated(data_FC_filter, n = 15)
+  data_FC_down <- top_n_downregulated(data_FC_filter, n = 15)
+  data_FC_up_down <- rbind(data_FC_up, data_FC_down)
+  
+  # Afficher les plots
+  print(Plot_DE_up_down(data_FC_up_down, title))
+  print(Plot_volcano_DE(data_FC_filter, title))
+  
+  # Retourner les données filtrées pour analyses ultérieures
+  invisible(data_FC_filter)
+}
+```
+
+## Cluster 15 vs All
+
+### Reactome
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_All_wo_cluster15/2024-02_Reactome_Exp_AllSample_cluster_15_vs_All_wo_cluster15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Reactome Cluster 15 vs All")
+Plot_volcano_DE(data_FC_filter,"Reactome Cluster 15 vs All")
+
+```
+
+### Biocarta
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_All_wo_cluster15/Biocarta_Exp_AllSample_cluster_15_vs_All_wo_cluster15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Biocarta Cluster 15 vs All")
+Plot_volcano_DE(data_FC_filter,"Biocarta Cluster 15 vs All")
+```
+
+> *"We present preclinical studies demonstrating that treatment with CD19-specific, chimeric antigen receptor (CAR)–modified T cells that are further modified to constitutively secrete IL-12 are able to safely eradicate established disease in the absence of prior conditioning. We demonstrate in a novel syngeneic tumor model that tumor elimination requires both CD4^+^ and CD8^+^ T-cell subsets, autocrine IL-12 stimulation, and subsequent IFNγ secretion by the CAR^+^ T cells. Importantly, IL-12–secreting, tumor-targeted T cells acquire intrinsic resistance to T regulatory cell–mediated inhibition. Based on these preclinical data, we anticipate that adoptive therapy using CAR-targeted T cells modified to secrete IL-12 will obviate or reduce the need for potentially hazardous conditioning regimens to achieve optimal antitumor responses in cancer patients."*
+
+[Hollie J. Pegram et al, Immunobiology 2012](https://ashpublications.org/blood/article/119/18/4133/30054/Tumor-targeted-T-cells-modified-to-secrete-IL-12)
+
+### C5
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_All_wo_cluster15/C5_Exp_AllSample_cluster_15_vs_All_wo_cluster15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"C5 Cluster 15 vs All")
+Plot_volcano_DE(data_FC_filter,"C5 Cluster 15 vs All")
+```
+
+### Gene Expression
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_All_wo_cluster15/Exp_AllSample_cluster_15_vs_All_wo_cluster15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Gene Expression Cluster 15 vs All")
+Plot_volcano_DE(data_FC_filter,"Gene Expression Cluster 15 vs All")
+```
+
+### Hallmark
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_All_wo_cluster15/H_Exp_AllSample_cluster_15_vs_All_wo_cluster15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Hallmark Cluster 15 vs All")
+Plot_volcano_DE(data_FC_filter,"Hallmark Cluster 15 vs All")
+```
+
+### Wikipathway
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_All_wo_cluster15/WikiPathway_2021_Human_Exp_AllSample_cluster_15_vs_All_wo_cluster15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Wikipathway Cluster 15 vs All")
+Plot_volcano_DE(data_FC_filter,"Wikipathway Cluster 15 vs All")
+```
+
+## CAR-T cluster 15 vs No-CAR-T cluster 15
+
+### Reactome
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/CART_cluster_15_vs_noCART_cluster_15/2024-02_Reactome_Exp_AllSample_CART_cluster_15_vs_noCART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Reactome CAR-T vs No-CAR-T")
+Plot_volcano_DE(data_FC_filter,"Reactome CAR-T vs No-CAR-T")
+
+```
+
+### Biocarta
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/CART_cluster_15_vs_noCART_cluster_15/Biocarta_Exp_AllSample_CART_cluster_15_vs_noCART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Biocarta CAR-T vs No-CAR-T")
+Plot_volcano_DE(data_FC_filter,"Biocarta CAR-T vs No-CAR-T")
+```
+
+Multiple signaling modules linked to T-cell receptor engagement and downstream regulation :
+
+-   TCRA : Lck and Fyn tyrosine kinases in initiation of TCR Activation
+
+-   CSK : Activation of Csk by cAMP-dependent Protein Kinase Inhibits Signaling through the T Cell Receptor
+
+-   TOB1 : Role of Tob in T-cell activation
+
+-   TCYTOTOXIC : T Cytotoxic Cell Surface Molecules
+
+-   NO2IL12 : NO2-dependent IL 12 Pathway in NK cells
+
+-   
+
+### C5
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/CART_cluster_15_vs_noCART_cluster_15/C5_Exp_AllSample_CART_cluster_15_vs_noCART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"C5 CAR-T vs No-CAR-T")
+Plot_volcano_DE(data_FC_filter,"C5 CAR-T vs No-CAR-T")
+```
+
+### Gene Expression
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/CART_cluster_15_vs_noCART_cluster_15/Exp_AllSample_CART_cluster_15_vs_noCART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Gene Expression CAR-T vs No-CAR-T")
+Plot_volcano_DE(data_FC_filter,"Gene Expression CAR-T vs No-CAR-T")
+```
+
+### Hallmark
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/CART_cluster_15_vs_noCART_cluster_15/H_Exp_AllSample_CART_cluster_15_vs_noCART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Hallmark CAR-T vs No-CAR-T")
+Plot_volcano_DE(data_FC_filter,"Hallmark CAR-T vs No-CAR-T")
+```
+
+### Wikipathway
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/CART_cluster_15_vs_noCART_cluster_15/WikiPathway_2021_Human_Exp_AllSample_CART_cluster_15_vs_noCART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Wikipathway CAR-T vs No-CAR-T")
+Plot_volcano_DE(data_FC_filter,"Wikipathway CAR-T vs No-CAR-T")
+```
+
+## Cluster 15 vs Cluster 6
+
+### Reactome
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_cluster_6/2024-02_Reactome_Exp_AllSample_cluster_15_vs_cluster_6.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Reactome Cluster 15 vs cluster 6")
+Plot_volcano_DE(data_FC_filter,"Reactome Cluster 15 vs cluster 6")
+
+```
+
+### Biocarta
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_cluster_6/Biocarta_Exp_AllSample_cluster_15_vs_cluster_6.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Biocarta Cluster 15 vs cluster 6")
+Plot_volcano_DE(data_FC_filter,"Biocarta Cluster 15 vs cluster 6")
+```
+
+-   HSWI_SNF : Chromatin Remodeling by hSWI/SNF ATP-dependent Complexes
+
+-   BARD1 : BRCA1-dependent Ub-ligase activity
+
+-   MCM : CDK Regulation of DNA Replication
+
+-   PTC1 : Sonic Hedgehog (SHH) Receptor Ptc1 Regulates cell cycle
+
+### C5
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_cluster_6/C5_Exp_AllSample_cluster_15_vs_cluster_6.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"C5 Cluster 15 vs cluster 6")
+Plot_volcano_DE(data_FC_filter,"C5 Cluster 15 vs cluster 6")
+```
+
+### Gene Expression
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_cluster_6/Exp_AllSample_cluster_15_vs_cluster_6.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Gene Expression Cluster 15 vs cluster 6")
+Plot_volcano_DE(data_FC_filter,"Gene Expression Cluster 15 vs cluster 6")
+```
+
+### Hallmark
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_cluster_6/H_Exp_AllSample_cluster_15_vs_cluster_6.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Hallmark Cluster 15 vs cluster 6")
+Plot_volcano_DE(data_FC_filter,"Hallmark Cluster 15 vs cluster 6")
+```
+
+-   HALLMARK_IL6_JAK_STAT3_SIGNALING : **intense cytokine-driven inflammatory signaling**.
+
+-   Mitotic Spindle : Cell division
+
+### Wikipathway
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Cluster_15_vs_cluster_6/WikiPathway_2021_Human_Exp_AllSample_cluster_15_vs_cluster_6.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Wikipathway Cluster 15 vs cluster 6")
+Plot_volcano_DE(data_FC_filter,"Wikipathway Cluster 15 vs cluster 6")
+```
+
+## DLBCL cluster 15 vs LN cluster 15
+
+### Reactome
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/DLBCL_cluster_15_vs_LN_cluster_15/2024-02_Reactome_Exp_AllSample_DLBCL_cluster_15_vs_LN_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Reactome DLBCL cluster 15 vs LN cluster_15")
+Plot_volcano_DE(data_FC_filter,"Reactome DLBCL cluster 15 vs LN cluster_15")
+```
+
+### Biocarta
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/DLBCL_cluster_15_vs_LN_cluster_15/Biocarta_Exp_AllSample_DLBCL_cluster_15_vs_LN_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Biocarta DLBCL cluster 15 vs LN cluster_15")
+Plot_volcano_DE(data_FC_filter,"Biocarta DLBCL cluster 15 vs LN cluster_15")
+```
+
+SET : Granzyme A mediated Apoptosis Pathway
+
+### C5
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/DLBCL_cluster_15_vs_LN_cluster_15/C5_Exp_AllSample_DLBCL_cluster_15_vs_LN_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"C5 DLBCL cluster 15 vs LN cluster_15")
+Plot_volcano_DE(data_FC_filter,"C5 DLBCL cluster 15 vs LN cluster_15")
+```
+
+### Gene Expression
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/DLBCL_cluster_15_vs_LN_cluster_15/Exp_AllSample_DLBCL_cluster_15_vs_LN_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Gene Expression DLBCL cluster 15 vs LN cluster_15")
+Plot_volcano_DE(data_FC_filter,"Gene Expression DLBCL cluster 15 vs LN cluster_15")
+```
+
+### Hallmark
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/DLBCL_cluster_15_vs_LN_cluster_15/H_Exp_AllSample_DLBCL_cluster_15_vs_LN_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Hallmark DLBCL cluster 15 vs LN cluster_15")
+Plot_volcano_DE(data_FC_filter,"Hallmark DLBCL cluster 15 vs LN cluster_15")
+```
+
+### Wikipathway
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/DLBCL_cluster_15_vs_LN_cluster_15/WikiPathway_2021_Human_Exp_AllSample_DLBCL_cluster_15_vs_LN_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Wikipathway DLBCL cluster 15 vs LN cluster_15")
+Plot_volcano_DE(data_FC_filter,"Wikipathway DLBCL cluster 15 vs LN cluster_15")
+```
+
+## Post Car-T Cluster 15 vs pre-CAR-T cluster 15
+
+### Reactome
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Post_CART_cluster_15_pre_CART_cluster_15/2024-02_Reactome_Exp_AllSample_post_CART_cluster_15_vs_pre_CART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Reactome Post Car-T cluster 15 vs pre-Car-T cluster 15")
+Plot_volcano_DE(data_FC_filter,"Reactome Post Car-T cluster 15 vs pre-Car-T cluster 15")
+```
+
+### Biocarta
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Post_CART_cluster_15_pre_CART_cluster_15/Biocarta_Exp_AllSample_post_CART_cluster_15_vs_pre_CART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Biocarta Post Car-T cluster 15 vs pre-Car-T cluster 15")
+Plot_volcano_DE(data_FC_filter,"Biocarta Post Car-T cluster 15 vs pre-Car-T cluster 15")
+```
+
+### C5
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Post_CART_cluster_15_pre_CART_cluster_15/C5_Exp_AllSample_post_CART_cluster_15_vs_pre_CART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"C5 Post Car-T cluster 15 vs pre-Car-T cluster 15")
+Plot_volcano_DE(data_FC_filter,"C5 Post Car-T cluster 15 vs pre-Car-T cluster 15")
+```
+
+### Gene Expression
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Post_CART_cluster_15_pre_CART_cluster_15/Exp_AllSample_post_CART_cluster_15_vs_pre_CART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Gene Expression Post Car-T cluster 15 vs pre-Car-T cluster 15")
+Plot_volcano_DE(data_FC_filter,"Gene Expression Post Car-T cluster 15 vs pre-Car-T cluster 15")
+```
+
+### Hallmark
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Post_CART_cluster_15_pre_CART_cluster_15/H_Exp_AllSample_post_CART_cluster_15_vs_pre_CART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Hallmark Post Car-T cluster 15 vs pre-Car-T cluster 15")
+Plot_volcano_DE(data_FC_filter,"Hallmark Post Car-T cluster 15 vs pre-Car-T cluster 15")
+```
+
+### Wikipathway
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Post_CART_cluster_15_pre_CART_cluster_15/WikiPathway_2021_Human_Exp_AllSample_post_CART_cluster_15_vs_pre_CART_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Wikipathway Post Car-T cluster 15 vs pre-Car-T cluster 15")
+Plot_volcano_DE(data_FC_filter,"Wikipathway Post Car-T cluster 15 vs pre-Car-T cluster 15")
+```
+
+## Relapse Cluster 15 vs Diag Cluster 15
+
+### Reactome
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Relapse_cluster_15_vs_diag_cluster_15/2024-02_Reactome_Exp_AllSample_relapse_cluster_15_vs_diag_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Reactome Relapse Cluster 15 vs Diag Cluster 15")
+Plot_volcano_DE(data_FC_filter,"Reactome Relapse Cluster 15 vs Diag Cluster 15")
+```
+
+### Biocarta
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Relapse_cluster_15_vs_diag_cluster_15/Biocarta_Exp_AllSample_relapse_cluster_15_vs_diag_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Biocarta Relapse Cluster 15 vs Diag Cluster 15")
+Plot_volcano_DE(data_FC_filter,"Biocarta Relapse Cluster 15 vs Diag Cluster 15")
+```
+
+### C5
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Relapse_cluster_15_vs_diag_cluster_15/C5_Exp_AllSample_relapse_cluster_15_vs_diag_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"C5 Relapse Cluster 15 vs Diag Cluster 15")
+Plot_volcano_DE(data_FC_filter,"C5 Relapse Cluster 15 vs Diag Cluster 15")
+```
+
+### Gene Expression
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Relapse_cluster_15_vs_diag_cluster_15/Exp_AllSample_relapse_cluster_15_vs_diag_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Gene Expression Relapse Cluster 15 vs Diag Cluster 15")
+Plot_volcano_DE(data_FC_filter,"Gene Expression Relapse Cluster 15 vs Diag Cluster 15")
+```
+
+### Hallmark
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Relapse_cluster_15_vs_diag_cluster_15/H_Exp_AllSample_relapse_cluster_15_vs_diag_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Hallmark Relapse Cluster 15 vs Diag Cluster 15")
+Plot_volcano_DE(data_FC_filter,"Hallmark Relapse Cluster 15 vs Diag Cluster 15")
+```
+
+### Wikipathway
+
+```{r}
+#| echo: false
+#| warning: false
+data_FC <- import(here("data/Signature_scores/Relapse_cluster_15_vs_diag_cluster_15/WikiPathway_2021_Human_Exp_AllSample_relapse_cluster_15_vs_diag_cluster_15.csv")) 
+data_FC_filter <- open_filter(data_FC,min_expression,threshold_pvalue,threshold_FC)
+data_FC_filter <- labels_n_up_down(data_FC_filter,n=10)
+
+data_FC_15_upregulated <- top_n_upregulated(data_FC_filter,n=15)
+data_FC_15_downregulated <- top_n_downregulated(data_FC_filter,n=15)
+
+data_FC_up_down <- rbind(data_FC_15_upregulated,data_FC_15_downregulated)
+
+Plot_DE_up_down(data_FC_up_down,"Wikipathway Relapse Cluster 15 vs Diag Cluster 15")
+Plot_volcano_DE(data_FC_filter,"Wikipathway Relapse Cluster 15 vs Diag Cluster 15")
+```
