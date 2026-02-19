@@ -11,8 +11,7 @@ open_filter <- function (data_FC,min_expression = 0.05 ,threshold_pvalue = 0.05,
   Col3 <- colnames(data_FC)[3]
   
   data_FC_filter <- data_FC |> 
-    mutate(across(where(is.numeric), ~na_if(., Inf))) |>
-    mutate(across(where(is.numeric), ~na_if(., -Inf))) |>
+    mutate(across(where(is.numeric), ~na_if(na_if(., Inf), -Inf))) |>
     drop_na() |>
     filter(!!sym(Col2)> min_expression | !!sym(Col3) > min_expression) |> 
     mutate(diffexpressed = case_when(
@@ -47,7 +46,7 @@ labels_n_up_down <- function(data_FC_filter,n=5){
 
 # Plots -------------------------------------------------------------------
 
-Plot_volcano_DE <- function(data_FC_filter,graph_title ="") {
+Plot_volcano_DE <- function(data_FC_filter, graph_title = "", threshold_FC = 0.5, threshold_pvalue = 0.05) {
   ggplot(data_FC_filter, aes(x=log2FC, y= minus_log10pvBH, color=diffexpressed, label=label)) + 
   geom_point() +
   geom_text_repel(size = 3) +

@@ -29,10 +29,17 @@ params:
 
 ```{r}
 #| warning: false
+#| label: setup
 library(here)
 library(DT)
 source(here("src/Metadata.R"))
 source(here("src/DE_analysis.R"))
+
+# Extraire les paramètres
+min_expression <- params$min_expression
+threshold_pvalue <- params$threshold_pvalue
+threshold_FC <- params$threshold_FC
+n_top_genes <- params$n_top_genes
 ```
 
 **Analysis parameters:**
@@ -41,17 +48,6 @@ source(here("src/DE_analysis.R"))
 -   p-value threshold (BH corrected): `r params$threshold_pvalue`
 -   Log2 fold-change threshold: ±`r params$threshold_FC`
 -   Top genes displayed: `r params$n_top_genes`
-
-```{r}
-#| label: setup-params
-#| include: false
-
-# Extraire les paramètres
-min_expression <- params$min_expression
-threshold_pvalue <- params$threshold_pvalue
-threshold_FC <- params$threshold_FC
-n_top_genes <- params$n_top_genes
-```
 
 ```{r}
 #| label: helper-function
